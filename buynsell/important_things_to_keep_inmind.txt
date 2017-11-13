@@ -1,0 +1,1 @@
+1. change permission of chatlog file to 0777

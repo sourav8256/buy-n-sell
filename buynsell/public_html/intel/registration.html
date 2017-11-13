@@ -1,0 +1,237 @@
+<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   padding-top: 35px;
+   padding-left: 30px;
+   width: 360px;
+   height: 520px;
+   border: 1px solid lightblue;
+   border-radius: 50px;
+   background-color: lightblue;
+   margin-left: 35%
+
+}  
+
+</style>
+
+
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Monsieur+La+Doulaise">
+<link rel="stylesheet" type="text/css" href="/intel/allpagestyle.css"> 
+
+</head>
+<body>
+
+
+
+<!--
+<div id="header">
+<h1><i>springpebbles.in<i></h1>
+</div>
+-->
+
+<div class="line" style="font-family: 'Monsieur La Doulaise'; margin-top: 80px; margin-bottom: 110px;"><span>Registration</span></div>
+
+
+<!--
+<h2><span><img src="cursive1.png" alt="cursive-fonts" border="0" height="50" width="150"></span></h2>
+<p> this is some content other </p>
+
+
+<h2><span><a href="http://fontmeme.com/cursive-fonts/"><img src="http://fontmeme.com/permalink/170310/f7d6d1a24c6554689c725335d3db403d.png" alt="cursive-fonts" border="0" height="50" width="150"></a></span></h2>
+<p> this is some content other </p>
+-->
+
+
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+
+<?php
+
+session_start();
+
+include "database.php";
+
+$emailErr=$passwordErr=$confirmpasswordErr=$instituteErr='';
+$email=$emailverification='';
+?>
+
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+
+ if (empty($_POST["institute"])) {
+    $instituteErr = "This field is required";
+ $errorflag=1;
+  } else {
+    $password = test_input($_POST["institute"]);
+  }
+
+
+ if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+$errorflag=1;
+  } else {
+    $email = test_input($_POST["email"]);
+    // check if e-mail address is well-formed
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+      $errorflag=1;
+    }
+  }
+  
+  if (empty($_POST["password"])) {
+    $passwordErr = "This field is required";
+ $errorflag=1;
+  } else {
+    $password = test_input($_POST["phoneno"]);
+  }
+  
+  
+  if (empty($_POST["confirmpassword"])) {
+    $confirmpasswordErr = "This field is required";
+ $errorflag=1;
+  } else {
+    $confirmpassword = test_input($_POST["phoneno"]);
+  }
+  
+  
+  
+  if($errorflag!=1)
+  {
+  
+  $sql = "SELECT * FROM registrations WHERE email='$email' ";
+$result = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_assoc($result);
+  if(empty($row['password']))
+  {
+  
+  $tquery2 = "SELECT MAX(registrationnumber) FROM registrations";
+   $tresult2 = mysqli_query($conn, $tquery2);
+
+   // get the query result without the while loop
+   $row2 = mysqli_fetch_array($tresult2);
+
+   $registrationnumber = $row2['MAX(registrationnumber)'] +1;
+  
+  $email=$_POST['email'];
+  $password=$_POST['password'];
+  $institute=$_POST['institute'];
+  $rand=mt_rand();
+  $sql6 = "INSERT INTO registrations ( email, password, registrationnumber, emailverificationstatus, rand, institute )
+ VALUES ('$email','$password','$registrationnumber', 'not-verified' , '$rand','$institute')";
+if (mysqli_query($conn, $sql6))
+ {
+
+    
+} else {
+
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+
+}
+  
+  
+  
+$msg = "Thank you for placing order please enter the link to verify your email address http://www.springpebbles.in/intel/emailverification.html?email=".$email."&code=".$rand;
+
+// use wordwrap() if lines are longer than 70 characters
+$msg = wordwrap($msg,70);
+
+// send email
+mail($email,"verification",$msg);
+
+$emailverification="AN EMAIL HAS BEEN SENT TO YOU PLEASE ENTER THE LINK IN THE EMAIL TO VERIFY YOUR EMAIL.<br> Plese check your \"spam\" folder incase you do not find it in your inbox";
+  
+  
+  $_SESSION['email']=$_POST['email'];
+$_SESSION['password']=$_POST['password'];
+}
+else
+{
+echo "THE EMAIL IS ALREADY REGISTERED";
+
+
+
+
+}
+
+
+  }
+ 
+  
+  }
+  
+  
+   function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+  
+  
+?>
+
+
+
+
+
+
+
+<div class="city">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+   
+   Institute.:<br>
+    <select name="institute">
+    	<option value="">Select</option>
+    	<option value="nit-agartala">NIT Agartala</option>
+    </select>
+  <span class="error">* <?php echo $instituteErr;?></span>
+  <br><br>
+
+   E-mail.:<br> <input type="text" name="email" value="<?php echo $email;?>">
+  <span class="error">* <?php echo $emailErr;?></span>
+  <br><br>
+  
+  Password.:<br>  
+  <input type="password" name="password" ><span class="error">*<?php echo $passwordErr;?></span>
+  <br><br>
+  
+  
+  Confirm Password.:<br>  
+  <input type="password" name="confirmpassword" ><span class="error">*<?php echo $confirmpasswordErr;?></span>
+  <br><br>
+  
+  
+  <input type="submit" name="submit" value="Register">
+  
+</form> 
+
+<span class="error">*<?php echo $emailverification;?></span>
+
+</div>
+
+<?php $conn->close(); ?>
+
+<div id="footer">
+Copyright © springpebbles.in
+</div>
+
+</body>
+</html>

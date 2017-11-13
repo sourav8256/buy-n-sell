@@ -1,0 +1,38 @@
+<?php
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+	
+	$fp=fopen("file.txt","w");
+	$filew=fwrite($fp, $_POST["text"]);
+	fclose($fp);
+}
+
+
+
+
+$fr=fopen("file.txt", 'r');
+$file=fread($fr, filesize("file.txt"));
+fclose($fr);
+
+
+
+
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<form action="index.html" method="post" enctype="miltipart/form-data">
+<textarea  rows="20" cols="60" name="text" value=""><?php echo $file; ?></textarea> 
+<input type="submit" name="submit" value="submit">
+</form>
+</body>
+</html>

@@ -1,0 +1,177 @@
+
+
+
+<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   padding-top: 35px;
+   padding-left: 30px;
+   width: 80%;
+   min-height: 0px;
+   border: 1px solid lightblue;
+   border-radius: 50px;
+   background-color: lightblue;
+   margin-left: 8%;
+   
+
+}  
+
+</style>
+
+
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Monsieur+La+Doulaise">
+<link rel="stylesheet" type="text/css" href="/intel/allpagestyle.css"> 
+
+</head>
+<body>
+
+
+
+<!--
+<div id="header">
+<h1><i>springpebbles.in<i></h1>
+</div>
+-->
+
+<div class="line" style="font-family: 'Monsieur La Doulaise'; margin-top: 80px; margin-bottom: 110px;"><span>Product</span></div>
+
+
+<!--
+<h2><span><img src="cursive1.png" alt="cursive-fonts" border="0" height="50" width="150"></span></h2>
+<p> this is some content other </p>
+
+
+<h2><span><a href="http://fontmeme.com/cursive-fonts/"><img src="http://fontmeme.com/permalink/170310/f7d6d1a24c6554689c725335d3db403d.png" alt="cursive-fonts" border="0" height="50" width="150"></a></span></h2>
+<p> this is some content other </p>
+-->
+
+
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+
+
+ <?php
+ $email=0;
+session_start();
+if(!isset($_SESSION['name']))
+{
+
+echo '<li><a href="login.html">Log in</a></li>';
+
+}
+else{
+
+echo '<li><a href="cpanel.html">Control Panel</a></li>';
+
+}
+?>
+</ul>
+
+
+<?php
+
+if(empty($_SESSION['name']))
+{
+
+echo "<ul>
+<li><a href='login.html'>It Is Recommended That You Login/Register because it is required for most of the functions.</a></li>
+</ul>";
+
+}
+
+?>
+
+</ul>
+
+<?php
+
+if(!isset($_SESSION['email']))
+{
+session_start();
+}
+
+
+include "database.php";
+
+$productcode=$_GET['productcode'];
+if(!empty($productcode))
+{
+$_SESSION['productcode']=$productcode;
+}
+
+$temp=$_SESSION['productcode'];
+
+$sql2 = "SELECT * FROM products WHERE productcode=$temp ";
+$result2 = mysqli_query($conn, $sql2);
+
+$row = mysqli_fetch_assoc($result2);
+
+?>
+
+
+<div class="city">
+<a href="/uploads/<?php echo $row['frontcover']; ?>"><img src="/uploads/<?php echo $row['frontcover']; ?>" alt="Icon" style="width:110px;height:110px;"></a>
+<h2><?php echo $row['name']; ?></h2>
+  <p><?php echo $row['publication']; ?></p>
+  <p>Price.: Rs <?php echo $row['price']; ?></p>
+<p>PRODUCT CODE.: Product Code is <?php echo $row['productcode']; ?><br>(Please Verify Your Product Code While Placing Order.)</p>
+<a href="/uploads/<?php echo $row['middlepage']; ?>"><img src="/uploads/<?php echo $row['middlepage']; ?>" alt="Icon" style="width:110px;height:110px;"></a>
+<a href="/uploads/<?php echo $row['backcover']; ?>"><img src="/uploads/<?php echo $row['backcover']; ?>" alt="Icon" style="width:110px;height:110px;"><br></a>
+
+</div>
+
+
+
+<div class="city">
+
+<br>
+<P><b>YOU CAN USE THE FOLLOWING INFORMATION TO CONTACT THE SELLER</b></P><br>
+
+<P><b>Name of the seller .: <?php echo $row['sellername']; ?> </b></P>
+<P><b>Email of the seller .: <?php echo $row['selleremail']; ?> </b></P>
+<P><b>Phone-number of the seller .: <?php echo $row['sellerphonenumber']; ?> </b></P>
+
+
+
+</div>
+
+<div class="city" style="text-align: center;">
+
+<?php $_SESSION['filename'.$productcode]=$_SESSION['email'].$row['productcode'].$row['selleremail'].".html"; 
+
+
+
+if(!isset($_SESSION['email']))
+{
+echo "You need to log in to talk to the seller please use the login option on the navigation bar then reload this page please.";
+}
+else
+{
+
+echo "<a href=chat_module/chat.html?pcode=".$row['productcode'].">Talk To Seller Directly</a>";
+
+
+}
+
+?>
+</div>
+
+
+<div id="footer">
+Copyright © oldie.comuf.com
+</div>
+
+</body>
+</html>

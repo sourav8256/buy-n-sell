@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Password Protected Area"
+AuthUserFile "/opt/lampp/htdocs/myserver/buynsell_backup/public_html/intel/.htpasswd"
+Require valid-user

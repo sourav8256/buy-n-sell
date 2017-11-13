@@ -1,0 +1,170 @@
+
+
+
+
+<?php
+session_start();
+if(!isset($_SESSION['email']))
+{
+header("Location: /intel/login.html");
+}
+?>
+
+
+
+
+<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   padding-top: 35px;
+   padding-left: 30px;
+   width: 80%;
+   min-height: 0px;
+   border: 1px solid lightblue;
+   border-radius: 50px;
+   background-color: lightblue;
+   margin-left: 8%;
+
+}  
+
+</style>
+
+
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Monsieur+La+Doulaise">
+<link rel="stylesheet" type="text/css" href="/intel/allpagestyle.css"> 
+
+</head>
+<body>
+
+
+
+<!--
+<div id="header">
+<h1><i>springpebbles.in<i></h1>
+</div>
+-->
+
+<div class="line" style="font-family: 'Monsieur La Doulaise'; margin-top: 80px; margin-bottom: 110px;"><span>C-panel</span></div>
+
+
+<!--
+<h2><span><img src="cursive1.png" alt="cursive-fonts" border="0" height="50" width="150"></span></h2>
+<p> this is some content other </p>
+
+
+<h2><span><a href="http://fontmeme.com/cursive-fonts/"><img src="http://fontmeme.com/permalink/170310/f7d6d1a24c6554689c725335d3db403d.png" alt="cursive-fonts" border="0" height="50" width="150"></a></span></h2>
+<p> this is some content other </p>
+-->
+
+
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+<?php
+
+session_start();
+
+include "database.php";
+
+?>
+
+
+<div class="city" style="text-align: center;">
+<br>
+<a href=newproduct_v2/newproduct.html>Create New Product</a> <br><br>
+
+</div>
+
+
+
+
+<div class="city">
+
+<?php
+
+$email=$_SESSION['email'];
+
+
+$sql = "SELECT * FROM products WHERE selleremail='$email' ";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    // output data of each row
+    while($row = mysqli_fetch_assoc($result)) {
+	
+	
+	
+	  echo "Product Name : " . $row["name"]. "  &nbsp &nbsp Product Code : ". $row["productcode"]."<br> <a href='productpage.html?productcode=".$row['productcode']."'>See Product Details.</a> <a href='editproducthandler.html?productcode=".$row['productcode']."'>Edit Product.</a> <a href='deleteproduct.html'>Delete Product.</a><br><hr>";
+    
+	
+	}
+} else {
+    echo "No Product Has Been Created By You Yet Click on New Product to Create A Product";
+}
+?>
+</div>
+
+
+
+<div class="city" colour='blue'>
+
+<?php
+
+$email=$_SESSION['email'];
+
+
+$sql = "SELECT * FROM chats WHERE selleremail='$email' ";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    // output data of each row
+    while($row = mysqli_fetch_assoc($result)) {
+	
+	
+	$_SESSION['filename'.$row['productcode']]=$row['filename'];
+	
+	if($row['newmessage']=='yes')
+	{
+	  echo "From : " . $row["email"]. "  | New Messages : <span style='background-color: blue'><font color='#fff497' >  &nbsp&nbsp&nbsp    ". $row["newmessage"]." &nbsp&nbsp&nbsp </font></span> <a href='chat_module/chat.html?pcode=".$row['productcode']."'>Reply</a><br>";
+    }
+	else
+	{
+	
+	echo "From : " . $row["email"]. " | New Messages : ". $row["newmessage"]." <a href='chat_module/chat.html?pcode=".$row['productcode']."'>Reply</a><br>";
+	
+	}
+
+echo "<hr>";
+
+	}
+
+} else {
+    echo "No Messages";
+}
+?>
+</div>
+
+
+
+
+<?php $conn->close(); ?>
+
+<div id="footer">
+Copyright © oldie.comuf.com
+</div>
+
+</body>
+</html>

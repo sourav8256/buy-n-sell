@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+<script type="text/javascript">
+
+function popup(url){
+  cuteLittleWindow = window.open(url, "littleWindow", "location=no,width=400,height=700"); 
+}
+
+</script>
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   width: 96%;
+   max-height: 520px;
+   border: 6px solid black;
+}  
+
+.error {color: #FF0000;}
+
+#header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+#section {
+    width:350px;
+    float:left;
+    padding:10px;
+}
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+ 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+</style>
+</head>
+<body>
+
+
+
+
+<div id="header">
+<h1>CONTROL PANEL</h1>
+</div>
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+
+<?php
+
+session_start();
+
+include "database.php";
+
+?>
+
+
+<div class="city">
+<br>
+<a href=newproduct.html>Create New Product</a> <br><br>
+<a href=deleteproduct.html>Delete A Product</a> <br><br>
+<a href=editproduct.html>Edit An Already Created Product</a> <br><br>
+</div>
+
+<div class="city">
+<?php 
+$email=$row['selleremail'];
+$sql3 = "SELECT * FROM messages WHERE email='$email' ";
+$result3 = mysqli_query($conn, $sql3);
+
+$row2 = mysqli_fetch_assoc($result3);
+
+$lim=mysqli_num_rows($result3);
+
+
+if (mysqli_num_rows($result) > 0) {
+$i=0;
+$a=array();
+    // output data of each row
+    while($row = mysqli_fetch_assoc($result)) {
+        echo "messagelisthandler.html?id=".$i;
+		$i++;
+		$a[$i]=$row2['filename'];
+		
+    }
+} else {
+    echo "0 results";
+}
+
+$_SESSION['filenames']=$a;
+
+
+?>
+
+</div>
+
+<?php $conn->close(); ?>
+
+<div id="footer">
+Copyright © oldie.comuf.com
+</div>
+
+</body>
+</html>

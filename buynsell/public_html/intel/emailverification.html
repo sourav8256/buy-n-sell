@@ -1,0 +1,198 @@
+ <meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   padding-top: 35px;
+   padding-left: 30px;
+   width: 360px;
+   height: 520px;
+   border: 1px solid lightblue;
+   border-radius: 50px;
+   background-color: lightblue;
+   margin-left: 35%
+
+}  
+
+</style>
+
+
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Monsieur+La+Doulaise">
+<link rel="stylesheet" type="text/css" href="allpagestyle.css"> 
+
+</head>
+<body>
+
+
+
+<!--
+<div id="header">
+<h1><i>springpebbles.in<i></h1>
+</div>
+-->
+
+<div class="line" style="font-family: 'Monsieur La Doulaise'; margin-top: 80px; margin-bottom: 110px;"><span>Email-Verifivation</span></div>
+
+
+<!--
+<h2><span><img src="cursive1.png" alt="cursive-fonts" border="0" height="50" width="150"></span></h2>
+<p> this is some content other </p>
+
+
+<h2><span><a href="http://fontmeme.com/cursive-fonts/"><img src="http://fontmeme.com/permalink/170310/f7d6d1a24c6554689c725335d3db403d.png" alt="cursive-fonts" border="0" height="50" width="150"></a></span></h2>
+<p> this is some content other </p>
+-->
+
+
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+
+
+
+
+  <?php
+   include "database.php";
+     
+	 $success="";
+	 session_start();
+     
+	 if(!empty($_GET['email']) && !empty($_GET['code']))
+	 {
+	 
+   $_SESSION['emailv']=$_GET['email'];
+   $_SESSION['randv']=$_GET['code'];
+     
+    }
+   
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
+
+ $errorflag=0;
+  
+  if (empty($_POST["password"])) {
+    $passwordErr = "Password is required";
+ $errorflag=1;
+  } else {
+    $password = test_input($_POST["phoneno"]);
+  }
+  
+  $sql = "SELECT * FROM registrations WHERE email='$email' ";
+$result = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_assoc($result);
+  
+  
+  
+  
+  if($errorflag!=1)
+  {
+  
+  $email=$_SESSION['emailv'];
+  $rand=$_SESSION['randv'];
+  $sql = "SELECT * FROM registrations WHERE email='$email' ";
+$result = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_assoc($result);
+
+
+  
+  
+  if($row['password']==$_POST['password'])
+  {
+  
+  $email=$_SESSION['emailv'];
+  $rand=$_SESSION['randv'];
+  
+  
+  
+  $sql2 = "UPDATE registrations SET emailverificationstatus='verified' WHERE rand='$rand' AND email='$email'";
+     
+    if (mysqli_query($conn, $sql2))
+    {
+     
+    $success = '<br><font color="red"><b>Thank You! Your Email Has Been Verified. You can log in now. You can contact us if you have a problem(contact details in the contact section of the page).<br><a href="index.html">Click Here</a></b></font>';
+
+    $_SESSION['email']=$_SESSION['emailv'];
+   $_SESSION['name']=$_SESSION['emailv'];
+$_SESSION['password']=$_POST['password'];
+
+     
+    } else 
+	{
+    $success = '<br><font color="red"><b>There Has Been A Problem, Please Reclick The Link. If It does not Work Please Send Your Email Via Whatsapp(numberr in contact section of the page) And We will Verify It Manually</b></font>';
+    } //if
+     
+}
+else
+{
+echo "THERE SEEMS TO BE AN ERROR PLEASE RE-TRY OR CONTACT US FROM THE CONTACT SECTION OF THE PAGE 1";
+}
+}
+else{
+echo "THERE SEEMS TO BE AN ERROR PLEASE RE-TRY OR CONTACT US FROM THE CONTACT SECTION OF THE PAGE";
+}
+
+
+
+  
+ 
+  
+  }
+  
+  
+   function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+  
+  
+?>
+
+
+
+
+
+
+
+<div class="city">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+   
+  
+  Please Re-enter Your Password.:<br>  
+  <input type="password" name="password" ><span class="error">*<?php echo $passwordErr;?></span>
+  <br><br>
+  
+  
+  
+  <input type="submit" name="submit" value="Login">
+  
+</form> 
+
+<?php echo $success; ?>
+
+</div>
+
+<?php $conn->close(); ?>
+
+
+
+<div id="footer">
+Copyright © springpebbles.in
+</div>
+
+</body>
+</html>

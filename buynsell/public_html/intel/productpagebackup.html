@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+<script type="text/javascript">
+
+function popup(url){
+  cuteLittleWindow = window.open(url, "littleWindow", "location=no,width=400,height=700"); 
+}
+
+</script>
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   width: 96%;
+   max-height: 520px;
+   border: 6px solid black;
+}  
+
+.error {color: #FF0000;}
+
+#header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+#section {
+    width:350px;
+    float:left;
+    padding:10px;
+}
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+ 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+</style>
+</head>
+<body>
+
+
+
+
+<div id="header">
+<h1>PRODUCT DETAILS</h1>
+</div>
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+
+<?php
+
+session_start();
+
+$servername = "mysql1.000webhost.com";
+$username = "a7907007_u";
+$password = "passwordLumia730";
+$dbname = "a7907007_db";
+
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+$db = @mysqli_select_db($dbname,$conn);
+
+$productcode=$_GET['productcode'];
+if(!empty($productcode))
+{
+$_SESSION['productcode']=$productcode;
+}
+
+$temp=$_SESSION['productcode'];
+
+$sql2 = "SELECT * FROM products WHERE productcode=$temp ";
+$result2 = mysqli_query($conn, $sql2);
+
+$row = mysqli_fetch_assoc($result2);
+
+?>
+
+
+<div class="city">
+<img src="images/<?php echo $row['frontcover']; ?>" alt="Icon" style="width:110px;height:110px;">
+<h2><?php echo $row['name']; ?></h2>
+  <p><?php echo $row['publication']; ?></p>
+  <p>Price.: Rs <?php echo $row['price']; ?></p>
+<p>PRODUCT CODE.: Product Code is <?php echo $row['productcode']; ?><br>(Please Verify Your Product Code While Placing Order.)</p>
+<img src="images/<?php echo $row['middlepage']; ?>" alt="Icon" style="width:110px;height:110px;">
+<img src="images/<?php echo $row['backcover']; ?>" alt="Icon" style="width:110px;height:110px;"><br>
+<a href="orderplacingform.html?productcode=<?php echo $row['productcode']; ?>">Place Order.</a>
+
+</div>
+
+
+
+<div class="city">
+
+<br>
+<P><b>YOU CAN USE THE FOLLOWING INFORMATION TO CONTACT THE SELLER</b></P><br>
+
+<P><b>Name of the seller .: <?php echo $row['sellername']; ?> </b></P>
+<P><b>Email of the seller .: <?php echo $row['selleremail']; ?> </b></P>
+<P><b>Phone-number of the seller .: <?php echo $row['sellerphonenumber']; ?> </b></P>
+
+
+
+</div>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+ if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+$errorflag=1;
+  } else {
+    $email = test_input($_POST["email"]);
+    // check if e-mail address is well-formed
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+      $errorflag=1;
+    }
+  }
+  
+  if (empty($_POST["password"])) {
+    $passwordErr = "Phone number is required";
+ $errorflag=1;
+  } else {
+    $password = test_input($_POST["phoneno"]);
+  }
+  
+  if($errorflag!=1)
+  {
+  $_SESSION['email']=$_POST['email'];
+$_SESSION['password']=$_POST['password'];
+
+$_SESSION['filename']=$_SESSION['email'].$_SESSION['password'].$row['selleremail'].".html";
+header("Location: chat.html");
+$file = fopen("chatlog/".$_SESSION['filename'],"a");
+  }
+ 
+  
+  }
+  
+  
+   function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+  
+  
+?>
+<div class="city">
+<br>
+<P><b>WANT TO TALK TO THE SELLER DIRECTLY THROUGH OUR WEBSITE? PLEASE FILL THE TWO FIELDS</b></P><br>
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+   E-mail.:<br> <input type="text" name="email" value="<?php echo $email;?>">
+  <span class="error">* <?php echo $emailErr;?></span>
+  <br><br>
+  
+  Please Enter a Message ID (it's like password. Use a new one if you don't already have one).:<br>If you have already started a conversation using this email and chat ID previous messages will also be retrieved<br>  
+  <input type="text" name="password" size="10"><span class="error">*<?php echo $passwordErr;?></span>
+  <br><br>
+  
+  <input type="submit" name="submit" value="Start Message">
+  
+</form> 
+
+</div>
+
+
+
+<div id="footer">
+Copyright © oldie.comuf.com
+</div>
+
+</body>
+</html>

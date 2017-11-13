@@ -1,0 +1,99 @@
+
+
+
+.error {color: #FF0000;}
+
+#header {
+    background-color: #fff;
+    color:blue;
+    text-align: center;
+    padding:5px;
+}
+#nav {
+    line-height:30px;
+    background-color: lightblue;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+#section {
+    width:350px;
+    float:left;
+    padding:10px;
+}
+#footer {
+    background-color:#E9F0F2;
+    color:blue;
+    clear:both;
+    text-align:center;
+    margin-bottom: 40px;
+}
+ 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #E9F0F2;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: blue;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    border-right: 1px solid darkblue ; 
+}
+
+li a:hover {
+    background-color: darkblue;
+    color: white;
+}
+
+
+
+@font-face{
+    font-family: mycursive;
+    url('/intel/fonts/monsieur-la-doulaise/MonsieurLaDoulaise-Regular.ttf');
+}
+
+
+    h1 {
+   width: 100 %;   
+   text-align: center; 
+   border-bottom: 1px solid blue;
+   color: blue;
+   font-size: 110px;
+   font-weight: normal;
+   line-height: 0.1em ;
+   margin: 10px 0 20px ;
+   
+}
+h1 span { 
+    background:#fff;
+    padding: 0 10px ;
+}
+
+
+
+.line {
+   width: 100 %;   
+   text-align: center; 
+   border-bottom: 1px solid blue;
+   color: blue;
+   font-size: 110px;
+   font-weight: normal;
+   line-height: 0.1em ;
+   margin: 10px 0 20px ;
+   
+}
+.line span { 
+    background:#fff;
+    padding: 0 0px ;
+}

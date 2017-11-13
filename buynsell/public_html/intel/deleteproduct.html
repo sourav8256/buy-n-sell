@@ -1,0 +1,59 @@
+
+
+
+
+<?php
+
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+include "database.php";
+
+$deletecode=$_POST['deletecode'];
+
+
+$sql2="SELECT frontcover,middlepage,backcover,selleremail FROM products WHERE productcode=$deletecode";
+$result2=mysqli_query($conn,$sql2);
+$row=mysqli_fetch_assoc($result2);
+
+
+// sql to delete a record
+
+
+$sql = "DELETE  FROM products WHERE productcode=$deletecode";
+
+if ($row['selleremail']==$_SESSION['email']) {
+	echo unlink("../uploads/".$row['frontcover']);
+echo unlink("../uploads/".$row['middlepage']);
+echo unlink("../uploads/".$row['backcover']);
+	mysqli_query($conn, $sql); 
+    echo "Product deleted successfully";
+} else {
+    echo "THE PRODUCT YOU ARE TRYING TO DELETE DOES NOT BELONG TO YOU " ;
+}
+
+
+
+mysqli_close($conn);
+
+}
+?> 
+
+
+
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+
+
+
+please enter the product code to be deleted.:<br>  
+  <input type="text" name="deletecode" >
+  <br><br>
+
+
+
+ 
+  <input type="submit" name="submit" value="Delete Product">
+<?php echo $success; ?>  
+</form>

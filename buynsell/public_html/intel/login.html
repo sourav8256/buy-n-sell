@@ -1,0 +1,175 @@
+
+
+<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+
+<style>
+.city {
+   float: left;
+   margin: 10px;
+   padding: 10px;
+   padding-top: 35px;
+   padding-left: 30px;
+   width: 360px;
+   height: 520px;
+   border: 1px solid lightblue;
+   border-radius: 50px;
+   background-color: lightblue;
+   margin-left: 35%
+
+}  
+
+</style>
+
+
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Monsieur+La+Doulaise">
+<link rel="stylesheet" type="text/css" href="/intel/allpagestyle.css"> 
+
+</head>
+<body>
+
+
+
+<!--
+<div id="header">
+<h1><i>springpebbles.in<i></h1>
+</div>
+-->
+
+<div class="line" style="font-family: 'Monsieur La Doulaise'; margin-top: 80px; margin-bottom: 110px;"><span>Login</span></div>
+
+
+<!--
+<h2><span><img src="cursive1.png" alt="cursive-fonts" border="0" height="50" width="150"></span></h2>
+<p> this is some content other </p>
+
+
+<h2><span><a href="http://fontmeme.com/cursive-fonts/"><img src="http://fontmeme.com/permalink/170310/f7d6d1a24c6554689c725335d3db403d.png" alt="cursive-fonts" border="0" height="50" width="150"></a></span></h2>
+<p> this is some content other </p>
+-->
+
+
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="news.html">News</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+
+
+<?php
+
+session_start();
+include "database.php";
+$emailErr=$passwordErr='';
+$email='';
+?>
+
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+ if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+$errorflag=1;
+  } else {
+    $email = test_input($_POST["email"]);
+    // check if e-mail address is well-formed
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+      $errorflag=1;
+    }
+  }
+  
+  if (empty($_POST["password"])) {
+    $passwordErr = "Password is required";
+ $errorflag=1;
+  } else {
+    $password = test_input($_POST["phoneno"]);
+  }
+  
+  $sql = "SELECT * FROM registrations WHERE email='$email' ";
+$result = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_assoc($result);
+  
+  
+  
+  
+  if($errorflag!=1)
+  {
+  
+  $sql = "SELECT * FROM registrations WHERE email='$email' ";
+$result = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_assoc($result);
+  
+  if($row['password']==$_POST['password']&&$row['emailverificationstatus']=='verified')
+  {
+  
+  $_SESSION['email']=$_POST['email'];
+   $_SESSION['name']=$_POST['email'];
+$_SESSION['password']=$_POST['password'];
+header("Location: index.html");
+}
+else{
+echo "EITHER THE EMAIL OR PASSWORD IS WRONG, THE ACCOUNT DOES NOT EXIST(in that case you can register a new account) OR EMAIL IS NOT VERIFIED(if you have registered but not verified your email check your email for the verification link please)";
+
+}
+
+
+  }
+ 
+  
+  }
+  
+  
+   function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+  
+  
+?>
+
+
+
+
+
+
+
+<div class="city">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+   E-mail.:<br> <input type="text" name="email" value="<?php echo $email;?>">
+  <span class="error">* <?php echo $emailErr;?></span>
+  <br><br>
+  
+  Password.:<br>  
+  <input type="password" name="password" ><span class="error">*<?php echo $passwordErr;?></span>
+  <br><br>
+  
+  
+  
+  <input type="submit" name="submit" value="Login">
+  
+</form> 
+
+<a href=registration.html>New To The Site? Register Here</a>
+
+</div>
+
+<?php $conn->close(); ?>
+
+<div id="footer">
+Copyright © buynsell
+</div>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<?php
+
+session_start();
+
+include "../database.php";
+
+
+
+
+$frontpage=$middlepage=$backpage=$price=$publisherdetails=$bookname=$inventory=$success=$success2=$errorflag="";
+$frontpageErr=$middlepageErr=$backpageErr=$priceErr=$publisherdetailsErr=$booknameErr=$inventoryErr=$sellernameErr=$selleremailErr=$sellerphonenumberErr=$productcodeErr="";
+$errorflag=$productcode=0;
+
+
+   $tquery = "SELECT MAX(productcode) FROM products";
+   $tresult = mysqli_query($conn, $tquery);
+
+   // get the query result without the while loop
+   $row = mysqli_fetch_array($tresult);
+
+   $pcode = $row['MAX(productcode)'] +1;
+
+
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+$success="<b>Product not created please recheck the form red letters will appear in the fields you have missed</b>";
+$success2="<b>Product not created please recheck the form red letters will appear in the fields you have missed</b>";
+
+
+if (empty($_POST["bookname"])) {
+    $booknameErr = "bookname is required";
+    echo $booknameErr;
+ $errorflag=1;
+  } else {
+    $bookname = test_input($_POST["bookname"]);
+  }
+
+
+if (empty($_POST["inventory"])) {
+   $inventoryErr = "inventory is required";
+   echo $inventoryErr;
+ $errorflag=1;
+  } else {
+    $inventory = test_input($_POST["inventory"]);
+  }
+
+
+
+if (empty($_POST["publisherdetails"])) {
+   $publisherdetailsErr = "publisherdetails is required";
+   echo $publisherdetailsErr;
+ $errorflag=1;
+  } else {
+    $publisherdetails = test_input($_POST["publisherdetails"]);
+  }
+  
+  if (empty($_POST["sellername"])) {
+   $sellernameErr = "Name of the seller is required";
+   echo $sellernameErr;
+ $errorflag=1;
+  } else {
+    $sellername = test_input($_POST["sellername"]);
+  }
+  
+  if (empty($_POST["selleremail"])) {
+   $selleremailErr = "Email of the seller is required is required";
+   echo $selleremailErr;
+ $errorflag=1;
+  } else {
+    $selleremail = test_input($_POST["selleremail"]);
+  }
+  
+  if (empty($_POST["sellerphonenumber"])) {
+   $sellerphonenumberErr = "Phone number of the seller is required";
+    echo $sellerphonenumberErr;
+ $errorflag=1;
+  } else {
+    $sellerphonenumber = test_input($_POST["sellerphonenumber"]);
+  }
+
+
+if (empty($_POST["price"])) {
+  $priceErr = "Price is required";
+   echo $priceErr;
+ $errorflag=1;
+  } else {
+    $price = test_input($_POST["price"]);
+  }
+
+
+
+
+
+
+
+echo $errorflag;
+
+
+if ($errorflag!=1)
+{
+
+echo "inside errorflag";
+
+$productcode=$pcode;
+$coverpage=$_POST["coverpage"];
+$middlepage=$_POST["middlepage"];
+$backcover=$_POST["backcover"];
+$bookname=$_POST["bookname"];
+$publisherdetails=$_POST["publisherdetails"];
+$price=$_POST["price"];
+$inventory=$_POST["inventory"];
+$sellername=$_POST["sellername"];
+$selleremail=$_POST["selleremail"];
+$sellerphonenumber=$_POST["sellerphonenumber"];
+$pcode=$pcode+1;
+$success="product created";
+$sql = "INSERT INTO products (frontcover, middlepage, backcover, name, publication, price, productcode, inventory, sellername, selleremail, sellerphonenumber )
+VALUES ('$coverpage', '$middlepage', '$backcover', '$bookname', '$publisherdetails',$price ,$productcode ,$inventory , '$sellername' , '$selleremail' , '$sellerphonenumber' )";
+
+if (mysqli_query($conn, $sql)) {
+
+echo "<br> inside query";
+    
+} else {
+   echo $success= "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+
+$success2=" PRODUCT HAS BEEN CREATED YOU CAN STILL USE THIS FORM TO CREATE YOUR NEXT PRODUCT";
+
+}
+}
+else
+{
+  echo "entry test fail";
+}  
+
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+
+}
+mysqli_close($conn);
+
+?>
+
